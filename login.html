@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login & Signup</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    body::before {
+      content: "";
+      background-image: url('https://www.drevio.com/wp-content/uploads/2021/04/9-Purple-Floral-Birthday-Invitation-Templates.jpg');
+      background-size: cover;
+      background-position: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      opacity: 0.95;
+    }
+
+    .container {
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 300px;
+      z-index: 10;
+      animation: slideIn 1s ease-out;
+      text-align: center;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(-100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    h2 {
+      margin-bottom: 10px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .toggle-links {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    .toggle-links a {
+      text-decoration: none;
+      color: #4CAF50;
+    }
+
+    .toggle-links a:hover {
+      text-decoration: underline;
+    }
+
+    .maid {
+      position: absolute;
+      width: 120px;
+      height: auto;
+      z-index: 1;
+    }
+
+    .maid1 {
+      top: 20px;
+      left: 0;
+      animation: moveRight 12s linear infinite;
+    }
+
+    .maid2 {
+      bottom: 20px;
+      right: 0;
+      animation: moveLeft 14s linear infinite;
+    }
+
+    .maid3 {
+      top: 0;
+      right: 30px;
+      animation: moveDown 16s linear infinite;
+    }
+
+    .maid4 {
+      bottom: 0;
+      left: 30px;
+      animation: moveUp 18s linear infinite;
+    }
+
+    @keyframes moveRight {
+      0% { left: 0; }
+      50% { left: 80%; }
+      100% { left: 0; }
+    }
+
+    @keyframes moveLeft {
+      0% { right: 0; }
+      50% { right: 80%; }
+      100% { right: 0; }
+    }
+
+    @keyframes moveDown {
+      0% { top: 0; }
+      50% { top: 80%; }
+      100% { top: 0; }
+    }
+
+    @keyframes moveUp {
+      0% { bottom: 0; }
+      50% { bottom: 80%; }
+      100% { bottom: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Animated Maid Characters -->
+  <img src="https://i.pinimg.com/originals/b2/4a/55/b24a55f7eef595cad06f6c186e7f7b47.png" class="maid maid1" alt="Maid 1">
+  <img src="https://waifu.clan.su/_ld/2/78541493.jpg" class="maid maid2" alt="Maid 2">
+  <img src="https://i.pinimg.com/736x/72/22/ed/7222ed2dfca2a04813fa1f39ea46c9a4.jpg" class="maid maid3" alt="Maid 3">
+  <img src="https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/cc101a9d-d97b-41a4-a1e4-6e45a3da1400/width=450/208413.jpeg" class="maid maid4" alt="Maid 4">
+
+  <!-- Login Form -->
+  <div class="container" id="login-container">
+    <h2>Login</h2>
+    <form onsubmit="return validateLogin()">
+      <input type="text" id="login-username" placeholder="Username" required>
+      <input type="password" id="login-password" placeholder="Password" required>
+      <button type="submit">Login</button>
+    </form>
+    <div class="toggle-links">
+      <a href="javascript:void(0)" onclick="toggleForm('signup')">Don't have an account? Signup</a>
+      <a href="javascript:void(0)" onclick="toggleForm('forgot-password')">Forgot password?</a>
+    </div>
+    <button onclick="goHome()" style="margin-top: 10px; background-color: #2196F3;">Back to Home Page</button>
+  </div>
+
+  <!-- Signup Form -->
+  <div class="container" id="signup-container" style="display: none;">
+    <h2>Signup</h2>
+    <form>
+      <input type="text" id="signup-username" placeholder="Username" required>
+      <input type="email" id="signup-email" placeholder="Email" required>
+      <input type="password" id="signup-password" placeholder="Password" required>
+      <input type="password" id="signup-confirm-password" placeholder="Confirm Password" required>
+      <button type="submit">Signup</button>
+    </form>
+    <div class="toggle-links">
+      <a href="javascript:void(0)" onclick="toggleForm('login')">Already have an account? Login</a>
+    </div>
+    <button onclick="goHome()" style="margin-top: 10px; background-color: #2196F3;">Back to Home Page</button>
+  </div>
+
+  <!-- Forgot Password Form -->
+  <div class="container" id="forgot-password-container" style="display: none;">
+    <h2>Reset Password</h2>
+    <form>
+      <input type="text" id="reset-username" placeholder="Enter Username" required>
+      <input type="password" id="new-password" placeholder="Enter New Password" required>
+      <input type="password" id="confirm-new-password" placeholder="Confirm New Password" required>
+      <button type="submit">Reset Password</button>
+    </form>
+    <div class="toggle-links">
+      <a href="javascript:void(0)" onclick="toggleForm('login')">Back to Login</a>
+    </div>
+    <button onclick="goHome()" style="margin-top: 10px; background-color: #2196F3;">Back to Home Page</button>
+  </div>
+
+  <!-- Voice Assistant Character -->
+  <img src="https://th.bing.com/th/id/OIG2.u8NaXMLTn_9gI48kLodh?w=1024&h=1024&rs=1&pid=ImgDetMain" alt="Sera Voice Assistant" style="position: fixed; bottom: 20px; left: 20px; width: 80px; z-index: 20;">
+
+  <!-- JavaScript -->
+  <script>
+    // Clear login flag unless it's set via form
+    localStorage.removeItem("isLoggedIn");
+
+    function toggleForm(form) {
+      document.getElementById('login-container').style.display = 'none';
+      document.getElementById('signup-container').style.display = 'none';
+      document.getElementById('forgot-password-container').style.display = 'none';
+      document.getElementById(form + '-container').style.display = 'block';
+    }
+
+    function validateLogin() {
+      const username = document.getElementById("login-username").value;
+      const password = document.getElementById("login-password").value;
+      if (username === 'admin' && password === 'admin123') {
+        localStorage.setItem("isLoggedIn", "true"); // Set login status
+        window.location.href = "dashboard.html";
+        return false;
+      } else {
+        alert("Invalid credentials. Please try again.");
+        return false;
+      }
+    }
+
+    function goHome() {
+      window.location.href = "home.html";
+    }
+
+    // Voice Assistant Integration
+    function speak(text) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      const voices = speechSynthesis.getVoices();
+      const zira = voices.find(voice => voice.name.includes("Zira"));
+      if (zira) utterance.voice = zira;
+      speechSynthesis.speak(utterance);
+    }
+
+    window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+
+    recognition.onresult = function(event) {
+      const transcript = event.results[event.results.length - 1][0].transcript.trim().toLowerCase();
+      console.log("Heard:", transcript);
+
+      if (transcript.includes("home")) {
+        speak("Taking you to the home page.");
+        window.location.href = "home.html";
+
+      } else if (transcript.includes("dashboard")) {
+        const isLoggedIn = localStorage.getItem("isLoggedIn");
+        if (isLoggedIn === "true") {
+          speak("Navigating to dashboard.");
+          window.location.href = "dashboard.html";
+        } else {
+          speak("Please log in first before going to the dashboard.");
+        }
+
+      } else {
+        speak("Sorry, I didn't catch that. Say 'home' or 'dashboard'.");
+      }
+    };
+
+    recognition.onerror = function(event) {
+      console.error("Speech recognition error:", event.error);
+    };
+
+    window.speechSynthesis.onvoiceschanged = () => {
+      speak("Hi! I'm Sera. What can I do for you?");
+      recognition.start();
+    };
+  </script>
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+  font-family: 'Inter', sans-serif;
+  background: url('https://img.freepik.com/premium-photo/abstract-background-design-images-wallpaper-ai-generated_643360-137347.jpg?w=2000') no-repeat center center fixed;
+  background-size: cover;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  display: flex;
+  color: #333;
+  flex-direction: column;
+}
+
+
+
+    .sidebar {
+      width: 100px;
+      padding: 25px 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: transparent;
+    }
+
+    .profile-container {
+      position: relative;
+    }
+
+    .profile-pic {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: url('https://th.bing.com/th/id/R.11227f9548eef97e4de838045e32d738?rik=Cdtbxi0nmFYxmA&riu=http%3a%2f%2fwww.pixelstalk.net%2fwp-content%2fuploads%2f2016%2f10%2fDoraemon-wallpaper-for-desktop.jpg&ehk=Wa3aQF%2b4c33lXV4j2W8O1%2bWkeF3hzkTeUJW%2faVBhMYw%3d&risl=&pid=ImgRaw&r=0') no-repeat center;
+      background-size: cover;
+      border: 1px solid #0c1219;
+      cursor: pointer;
+      margin-left: 40px; /* 👈 This moves it to the right */
+      transition: 0.3s ease;
+    }
+
+    .profile-options {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+      width: 120px;
+    }
+
+    .profile-options.show {
+      display: flex;
+    }
+
+    .profile-options button {
+      padding: 8px;
+      font-size: 14px;
+      border: 2px solid #007bff;
+      border-radius: 8px;
+      background-color: #fff;
+      color: #007bff;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .profile-options button:hover {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 200px);
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .dashboard-button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .dashboard-button button {
+      width: 200px;
+      padding: 18px;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .dashboard-button button:hover {
+      background-color: #0056b3;
+    }
+
+    .dashboard-button span {
+      margin-top: 10px;
+      font-size: 16px;
+      font-weight: 500;
+      color: #444;
+    }
+
+    .welcome-text {
+      font-size: 28px;
+      font-weight: 700;
+      color: #444;
+      margin: 30px 0;
+    }
+
+    /* Chatbot */
+    #chatbot-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+    #chat-icon {
+      background: #007bff;
+      color: white;
+      width: 55px;
+      height: 55px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 28px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      transition: transform 0.2s;
+    }
+    #chat-icon:hover {
+      transform: scale(1.1);
+    }
+    #chat-window {
+      width: 320px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.15);
+      position: absolute;
+      top: 70px;
+      right: 0;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    #chat-header {
+      background: #007bff;
+      color: white;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: bold;
+    }
+    #chat-body {
+      height: 240px;
+      overflow-y: auto;
+      padding: 10px;
+      font-size: 14px;
+    }
+    #chat-input {
+      border: none;
+      padding: 12px;
+      border-top: 1px solid #ddd;
+      font-size: 14px;
+      outline: none;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1001;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+    .modal-content {
+      background-color: white;
+      margin: 8% auto;
+      padding: 25px;
+      border-radius: 12px;
+      width: 350px;
+      text-align: center;
+      box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+    }
+    .modal-content h3 {
+      margin-top: 0;
+    }
+    .close {
+      float: right;
+      font-size: 22px;
+      cursor: pointer;
+    }
+    input, textarea {
+      width: 95%;
+      padding: 10px;
+      margin-top: 12px;
+      border: 1px solid #110d0d;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    textarea {
+      resize: none;
+      height: 70px;
+    }
+    .modal-content button {
+      margin-top: 15px;
+      padding: 10px 16px;
+      background: none;
+      color: rgb(22, 19, 19);
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .reviews-section {
+    margin-top: 40px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .reviews-section h2 {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #444;
+  }
+
+  .reviews-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .review-card {
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #f1f1f1;
+    transition: transform 0.3s ease;
+  }
+
+  .review-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .reviewer-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .review-stars {
+    font-size: 16px;
+    color: #FFD700; /* Gold color for stars */
+    margin-top: 5px;
+  }
+
+  .review-text {
+    font-size: 14px;
+    color: #555;
+    margin-top: 10px;
+    line-height: 1.6;
+  }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="profile-container">
+      <div class="profile-pic" onclick="toggleProfileOptions()"></div>
+      <div class="profile-options" id="profile-options">
+        <button onclick="openModal()">Edit Profile</button>
+        <button onclick="logout()">Logout</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="dashboard-grid">
+      <div class="dashboard-button">
+        <button onclick="location.href='hire.html'">Hire Worker</button>
+        <span>Find people for your tasks</span>
+      </div>
+      <div class="dashboard-button">
+        <button onclick="location.href='profile.html'">Make a Profile</button>
+        <span>Offer your skills</span>
+      </div>
+    </div>
+    <!-- New Review System Button -->
+    <div class="dashboard-button">
+      <button onclick="location.href='review.html'">Review System</button>
+      <span>Give and read reviews</span>
+    </div>
+
+    <div class="welcome-text">👋 Welcome to Your Dashboard!</div>
+
+    <div class="dashboard-grid">
+      <div class="dashboard-button">
+        <button onclick="location.href='Hiring_status_worker.html'">Worker Status</button>
+        <span>Your hired profiles</span>
+      </div>
+      <div class="dashboard-button">
+        <button onclick="location.href='messages.html'">Hirer Status</button>
+        <span>See who hired you</span>
+      </div>
+    </div>
+    <div class="reviews-section">
+      <h2>Recommending Top Workers</h2>
+      <div class="reviews-list" id="reviews-list">
+        <!-- Reviews will be displayed here -->
+      </div>
+    </div>
+</div>
+  </div>
+
+  <!-- Chatbot -->
+  <div id="chatbot-container">
+    <div id="chat-icon" onclick="toggleChatbot()">💬</div>
+    <div id="chat-window">
+      <div id="chat-header">Chatbot <span onclick="toggleChatbot()">✖</span></div>
+      <div id="chat-body"></div>
+      <input type="text" id="chat-input" placeholder="Ask a question..." onkeypress="handleChat(event)">
+    </div>
+  </div>
+
+  <!-- Edit Profile Modal -->
+  <div id="editProfileModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h3>Edit Profile</h3>
+      <input type="file" id="profileImageInput">
+      <input type="text" id="imageUrlInput" placeholder="Paste image URL from Google">
+      <textarea id="bioInput" placeholder="Enter your bio"></textarea>
+      <button onclick="saveProfile()">Save</button>
+    </div>
+  </div>
+  <img src="https://th.bing.com/th/id/OIG2.u8NaXMLTn_9gI48kLodh?w=1024&h=1024&rs=1&pid=ImgDetMain" 
+     alt="Sera Assistant" 
+     style="position: fixed; bottom: 20px; left: 20px; width: 90px; height: 90px; z-index: 1000; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.2);" />
+
+
+     <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        loadProfile();
+        startVoiceAssistant();
+      });
+    
+      function logout() {
+        alert("You have been logged out.");
+        window.location.href = "login.html";
+      }
+    
+      function openModal() {
+        document.getElementById('editProfileModal').style.display = 'block';
+      }
+    
+      function closeModal() {
+        document.getElementById('editProfileModal').style.display = 'none';
+      }
+    
+      function saveProfile() {
+        let bioText = document.getElementById('bioInput').value;
+        localStorage.setItem("userBio", bioText);
+    
+        let fileInput = document.getElementById('profileImageInput');
+        let urlInput = document.getElementById('imageUrlInput').value;
+    
+        if (urlInput) {
+          document.querySelector('.profile-pic').style.backgroundImage = `url(${urlInput})`;
+          localStorage.setItem("profilePic", urlInput);
+        } else if (fileInput.files && fileInput.files[0]) {
+          let reader = new FileReader();
+          reader.onload = function (e) {
+            document.querySelector('.profile-pic').style.backgroundImage = `url(${e.target.result})`;
+            localStorage.setItem("profilePic", e.target.result);
+          };
+          reader.readAsDataURL(fileInput.files[0]);
+        }
+    
+        closeModal();
+      }
+    
+      function loadProfile() {
+        let savedBio = localStorage.getItem("userBio");
+        let savedProfilePic = localStorage.getItem("profilePic");
+    
+        if (savedProfilePic) {
+          document.querySelector('.profile-pic').style.backgroundImage = `url(${savedProfilePic})`;
+        }
+      }
+    
+      function toggleChatbot() {
+        const chatWindow = document.getElementById("chat-window");
+        chatWindow.style.display = (chatWindow.style.display === "flex") ? "none" : "flex";
+      }
+    
+      function handleChat(event) {
+        if (event.key === "Enter") {
+          let input = document.getElementById("chat-input").value.toLowerCase().trim();
+          let chatBody = document.getElementById("chat-body");
+    
+          if (!input) return;
+    
+          chatBody.innerHTML += `<p><strong>You:</strong> ${input}</p>`;
+          document.getElementById("chat-input").value = "";
+    
+          const faqResponses = {
+            "how do i hire a worker": "Click on the 'Hire Worker' button on your dashboard.",
+            "how can i create a profile for work": "Click on the 'Make a Profile' button.",
+            "what is the hiring status button for": "There are separate buttons for worker and hirer hiring status.",
+            "how do i edit my profile information": "Click on the profile picture and select 'Edit Profile'.",
+            "how do i log out": "Click on the profile picture and select 'Logout'.",
+            "how do i use the chat feature": "Click the chat icon (💬) to start chatting.",
+            "can i delete my profile": "Currently, there is no delete option.",
+            "how can i contact customer support": "Use the chatbot or support email.",
+            "what happens after i hire a worker": "The hired worker appears in your status panel.",
+            "is this app free to use": "Yes, the app is completely free."
+          };
+    
+          let response = faqResponses[input] || "I'm sorry, I don't understand that question.";
+          chatBody.innerHTML += `<p><strong>Bot:</strong> ${response}</p>`;
+          chatBody.scrollTop = chatBody.scrollHeight;
+        }
+      }
+    
+      function toggleProfileOptions() {
+        document.getElementById("profile-options").classList.toggle("show");
+      }
+    
+      // 🧠 SERA - Voice Assistant
+      function startVoiceAssistant() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    alert("Speech Recognition not supported in this browser.");
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
+  recognition.continuous = false;
+  recognition.interimResults = false;
+  recognition.lang = 'en-US';
+
+  let hasGreeted = false;
+  let isRecognizing = false; // 👈 flag to track recognition state
+
+  function speak(message, callback) {
+    console.log("Sera speaking:", message);
+    if (isRecognizing) {
+      recognition.stop(); // 👈 stop before speaking
+    }
+
+    const utterance = new SpeechSynthesisUtterance(message);
+    const voices = speechSynthesis.getVoices();
+    const zira = voices.find(voice => voice.name.toLowerCase().includes("zira"));
+    if (zira) utterance.voice = zira;
+
+    utterance.onend = () => {
+      console.log("Sera finished speaking");
+      if (callback) callback();
+
+      // Only start if not already listening
+      if (!isRecognizing) {
+        recognition.start();
+        isRecognizing = true;
+      }
+    };
+
+    speechSynthesis.speak(utterance);
+  }
+
+  recognition.onstart = () => {
+    isRecognizing = true;
+    console.log("Sera is now listening...");
+  };
+
+  recognition.onend = () => {
+    isRecognizing = false;
+    console.log("Sera stopped listening.");
+  };
+
+  recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript.toLowerCase().trim();
+    console.log("Heard:", transcript);
+
+    if (transcript.includes("hire") || transcript.includes("higher")) {
+  speak("Opening hire a worker page.", () => window.location.href = "hire.html");
+} else if (transcript.includes("profile")) {
+  speak("Opening your profile page.", () => window.location.href = "profile.html");
+} else if (transcript.includes("edit")) {
+  speak("Editing your profile.", openModal);
+} else if (transcript.includes("logout")) {
+  speak("Logging you out.", logout);
+} else if (transcript.includes("worker status")) {
+  speak("Opening your worker status.", () => window.location.href = "Hiring_status_worker.html");
+} else if (transcript.includes("hirer status") || transcript.includes("who hired")) {
+  speak("Opening your hirer status.", () => window.location.href = "messages.html");
+} else if (transcript.includes("open chatbot") || transcript.includes("open chat")) {
+  speak("Opening the chatbot.", () => {
+    const chatWindow = document.getElementById("chat-window");
+    if (chatWindow) chatWindow.style.display = "flex";
+  });
+} else if (transcript.includes("close chatbot") || transcript.includes("close chat")) {
+  speak("Closing the chatbot.", () => {
+    const chatWindow = document.getElementById("chat-window");
+    if (chatWindow) chatWindow.style.display = "none";
+  });
+} else {
+  speak("Sorry, I didn't get that.");
+}
+
+  };
+
+  recognition.onerror = (event) => {
+    console.warn("Recognition error:", event.error);
+    isRecognizing = false;
+
+    if (event.error === "not-allowed" || event.error === "service-not-allowed") {
+      alert("Microphone access denied. Please allow mic permissions.");
+    } else {
+      setTimeout(() => {
+        if (!isRecognizing) {
+          recognition.start();
+          isRecognizing = true;
+        }
+      }, 1500);
+    }
+  };
+
+  // Initial greeting
+  if (!hasGreeted) {
+    hasGreeted = true;
+    speak("Hi, I'm Sera. How can I assist you?", () => {
+      if (!isRecognizing) {
+        recognition.start();
+        isRecognizing = true;
+      }
+    });
+  }
+}
+window.onload = function() {
+    displayReviews();
+  }
+
+  function displayReviews() {
+    // Fetch high-rated reviews from localStorage
+    const highRatedWorkers = JSON.parse(localStorage.getItem("highRatedWorkers")) || [];
+    
+    // Get the container where reviews will be displayed
+    const reviewsList = document.getElementById("reviews-list");
+    reviewsList.innerHTML = ""; // Clear existing reviews
+
+    if (highRatedWorkers.length === 0) {
+      reviewsList.innerHTML = "<p>No 4 or 5 star reviews found.</p>";
+      return;
+    }
+
+    // Iterate through the reviews and create HTML for each
+    highRatedWorkers.forEach(review => {
+      const reviewCard = document.createElement("div");
+      reviewCard.classList.add("review-card");
+
+      reviewCard.innerHTML = `
+        <div class="reviewer-name">${review.workerName}</div>
+        <div class="review-stars">⭐ ${review.rating} Stars</div>
+        <div class="review-text">${review.review}</div>
+      `;
+
+      reviewsList.appendChild(reviewCard);
+    });
+  }
+
+
+    </script>
+    
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
